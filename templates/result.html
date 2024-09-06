@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Attendance Records</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+        h1 {
+            color: #333;
+            margin: 20px 0;
+            font-size: 2rem;
+        }
+        table {
+            width: 80%;
+            margin: 20px auto;
+            border-collapse: collapse;
+        }
+        table, th, td {
+            border: 1px solid #ddd;
+        }
+        th, td {
+            padding: 12px;
+            text-align: center;
+        }
+        th {
+            background-color: #007BFF;
+            color: white;
+        }
+        tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+        tr:hover {
+            background-color: #ddd;
+        }
+        #result {
+            margin-top: 20px;
+            font-size: 18px;
+            color: #333;
+        }
+    </style>
+</head>
+<body>
+    <h1>Attendance Records</h1>
+
+    <!-- Table to display the records -->
+    <table>
+        <tr>
+            <th>Name</th>
+            <th>Timestamp</th>
+        </tr>
+        {% for record in records %}
+        <tr>
+            <td>{{ record[0] }}</td>
+            <td>{{ record[1] }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+ <!-- Buttons to delete SQL records and Azure Blob storage data -->
+    <div id="deleteButtons">
+        <button class="delete-btn" id="deleteSqlData">Delete SQL Records</button>
+        <button class="delete-btn" id="deleteBlobData">Delete Blob Data</button>
+    </div>
+
+
+    <div id="result"></div>
+
+    <script>
+        // Delete SQL Records
+        document.getElementById('deleteSqlData').addEventListener('click', function() {
+            fetch('/delete-sql-data', {
+                method: 'POST'
+            })
+             .then(response => {
+        if (response.ok) {
+            return response.text();  // Expecting text, not JSON
+        } else {
+            throw new Error('Failed to delete SQL records.');
+        }
+    })
+    .then(data => {
+        alert(data);  // Display the response message
+        window.location.reload(); // Refresh the page
+    })
+    .catch(error => console.error('Error:', error));
+});
+
+
+
+        // Delete Blob Data
+        document.getElementById('deleteBlobData').addEventListener('click', function() {
+            fetch('/delete-blob-data', {
+                method: 'POST'
+            })
+            .then(response => response.text())
+            .then(data => {
+                document.getElementById('result').innerText = data; // Display the result in the result div
+            })
+            .catch(error => console.error('Error:', error));
+        });
+
+        document.getElementById('checkAttendanceLink').addEventListener('click', function(event) {
+            event.preventDefault(); // Prevent default link behavior
+
+            fetch('/check-attendance', {
+                method: 'GET'
+            })
+            .then(response => response.text())
+            .then(data => {
+                document.getElementById('result').innerHTML = data; // Display the result in the result div
+            })
+            .catch(error => console.error('Error:', error));
+        });
+    </script>
+</body>
+</html>

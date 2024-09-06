@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/html">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Live Face Attendance System</title>
+    <style>
+  body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f0f0f0;
+}
+
+.navbar {
+    width: 100%;
+    background-color: #007BFF; /* Add background color for visibility */
+    color: #fff;
+    padding: 10px;
+    text-align: center;
+    margin-bottom: 20px; /* Space between navbar and container */
+    position: fixed; /* Fix position at the top */
+    top: 0; /* Align to the top */
+    left: 0;
+    z-index: 1000; /* Ensure it stays above other content */
+}
+
+.navbar h1 {
+    margin: 0;
+    font-size: 24px;
+}
+
+.container {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    max-width: 1200px;
+    gap: 20px;
+    padding: 20px;
+    padding-top: 60px; /* Adjust padding-top to account for fixed navbar */
+    box-sizing: border-box;
+    margin: 0 auto; /* Center container horizontally */
+}
+
+.section {
+    background-color: #fff;
+    border: 2px solid #ddd;
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 550px; /* Adjusted max-width to better fit */
+}
+
+#video {
+    border: 2px solid #333;
+    border-radius: 8px;
+    max-width: 100%; /* Ensures video fits within container */
+}
+
+#toggleButton, #uploadButton {
+    background-color: #007BFF;
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    margin: 10px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+#toggleButton:hover, #uploadButton:hover {
+    background-color: #0056b3;
+}
+
+#result {
+    margin-top: 20px;
+    font-size: 18px;
+    color: #333;
+}
+
+#canvas {
+    display: none;
+}
+
+@media (max-width: 768px) {
+    .container {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .section {
+        max-width: 100%;
+        margin-bottom: 20px;
+    }
+}
+
+/* Table styles */
+#blobTable {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+#blobTable th, #blobTable td {
+    border: 1px solid #ddd;
+    padding: 8px;
+}
+
+#blobTable th {
+    background-color: #007BFF;
+    color: white;
+}
+</style>
+</head>
+<body>
+  <div class="navbar">
+        <h1>Live Face Check-In</h1>
+    </div>
+
+
+    <div class="container">
+        <!-- Section for uploading images to Azure Blob Storage -->
+        <div class="section">
+            <div class="Add New Student Face">
+            <h2>Add New Student Face </h2>
+            <form id="uploadForm" enctype="multipart/form-data">
+                <input type="file" id="fileInput" name="image" accept="image/*" />
+                <button type="submit" id="uploadButton">Upload Image</button>
+            </form>
+        </div>
+
+        <!-- Table to display blob images -->
+        <div class="container">
+            <div class="Student Records" >
+                <h2>Student Records</h2>
+            <table id="blobTable">
+                <thead>
+                    <tr>
+                        <th>Image Name</th>
+                    </tr>
+                </thead>
+                <tbody id="blobTableBody">
+                    <!-- Rows will be dynamically added here -->
+                </tbody>
+            </table>
+            </div>
+        </div>
+
+    </div>
+
+        <!-- Section for live video feed and face recognition -->
+        <div class="section">
+            <canvas id="canvas"></canvas>
+            <button id="toggleButton">Record Attendance</button>
+
+            <!-- Button to check attendance -->
+            <a href="/check-attendance" id="checkAttendanceLink">Check Attendance</a>
+
+            <!-- Video element to display the webcam feed -->
+            <video id="video" width="640" height="480" autoplay></video>
+
+
+
+            <!-- Section to display messages or results -->
+            <div id="result"></div>
+        </div>
+    </div>
+
+<script>
+    const canvas = document.getElementById("canvas");
+    const context = canvas.getContext("2d");
+    const toggleButton = document.getElementById("toggleButton");
+    const video = document.getElementById("video");
+    const uploadForm = document.getElementById("uploadForm");
+    const blobTableBody = document.getElementById("blobTableBody");
+
+    let stream;
+    let isCapture = false;
+    let captureFramesInterval;
+
+    const sendFrame = (dataURL) => {
+        fetch("/upload_frame", {
+            method: "POST",
+            body: JSON.stringify({ image: dataURL }),
+            headers: {
+                "Content-Type": "application/json",
+            },
+        })
+        .then((response) => response.json())
+        .then((data) => {
+            console.log("Frame uploaded successfully:", data);
+        })
+        .catch((error) => {
+            console.error("Error uploading frame:", error);
+        });
+    };
+
+    const startVideoStream = () => {
+        navigator.mediaDevices
+            .getUserMedia({ video: true })
+            .then((mediaStream) => {
+                stream = mediaStream;
+                video.srcObject = mediaStream;
+                toggleButton.textContent = "Stop Video"; // Change button text to 'Stop Video'
+                isCapture = true;
+                captureFrames(); // Start capturing frames
+            })
+            .catch((error) => {
+                console.error("Error accessing webcam:", error);
+                document.getElementById("result").innerText =
+                    "Error accessing webcam.";
+            });
+    };
+
+    const stopVideoStream = () => {
+        if (stream) {
+            stream.getTracks().forEach((track) => track.stop());
+            video.srcObject = null;
+            toggleButton.textContent = "Record Attendance"; // Change button text back to 'Record Attendance'
+            isCapture = false;
+            clearInterval(captureFramesInterval); // Stop capturing frames
+        }
+    };
+
+    const captureFrames = () => {
+        if (!isCapture) return;
+
+        canvas.width = video.videoWidth;
+        canvas.height = video.videoHeight;
+        context.drawImage(video, 0, 0, canvas.width, canvas.height);
+
+        // Capture frames continuously
+        captureFramesInterval = setInterval(() => {
+            if (isCapture) {
+                canvas.width = video.videoWidth;
+                canvas.height = video.videoHeight;
+                context.drawImage(video, 0, 0, canvas.width, canvas.height);
+
+                const dataURL = canvas.toDataURL("image/png");
+                sendFrame(dataURL);
+            } else {
+                clearInterval(captureFramesInterval); // Stop capturing if isCapture is false
+            }
+        }, 1000); // Adjust the interval time (in milliseconds) as needed
+    };
+
+    toggleButton.addEventListener("click", () => {
+        if (isCapture) {
+            stopVideoStream(); // Stop the video stream if it's active
+        } else {
+            startVideoStream(); // Start the video stream if it's not active
+        }
+    });
+
+    // Upload image form handling
+    uploadForm.addEventListener("submit", (e) => {
+        e.preventDefault();
+        const formData = new FormData(uploadForm);
+        fetch("/upload_image", {
+            method: "POST",
+            body: formData,
+        })
+        .then((response) => response)
+        .then((data) => {
+            document.getElementById("result").innerText =
+                "Image uploaded successfully.";
+            updateBlobTable(); // Update table after upload
+        })
+        .catch((error) => {
+            console.error("Error uploading image:", error);
+            document.getElementById("result").innerText =
+                "Error uploading image.";
+        });
+    });
+
+    // Fetch and update blob names in the table
+    const updateBlobTable = () => {
+        fetch("/list-blobs")
+            .then((response) => response.json())
+            .then((blobNames) => {
+                blobTableBody.innerHTML = ""; // Clear existing table rows
+                blobNames.forEach((name) => {
+                    const row = document.createElement("tr");
+                    const cell = document.createElement("td");
+                    cell.textContent = name;
+                    row.appendChild(cell);
+                    blobTableBody.appendChild(row);
+                });
+            })
+            .catch((error) => {
+                console.error("Error fetching blob names:", error);
+            });
+    };
+
+    // Initial update of the table
+    updateBlobTable();
+</script>
+</body>
+</html>
