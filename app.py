@@ -7,14 +7,38 @@ from flask import Flask, request, jsonify
 from flask import render_template
 from flask_cors import CORS
 import azureSqldatabase
+import emailService
 import main
 
 app = Flask(__name__)
 cors = CORS(app)
 app.config['UPLOAD_FOLDER'] = 'images'
 
+if os.environ.get('FLASK_ENV') == 'development':
+    @app.route('/favicon.ico')
+    def favicon():
+        return '', 204
+
 if not os.path.exists(app.config['UPLOAD_FOLDER']):
     os.makedirs(app.config['UPLOAD_FOLDER'])
+
+
+@app.route('/send-email', methods=['POST'])
+def send_email():
+    try:
+        data = request.json
+        recipient = data.get('recipients', '')
+
+        if not recipient:
+            return jsonify({'message': 'No recipients provided.'}), 400
+
+        excel_df = azureSqldatabase.fetch_attendance()
+        file_path = azureSqldatabase.save_to_excel(excel_df)
+        response = emailService.send_email_with_attachment(file_path, recipient)
+        return jsonify(({'Email status': response['status']})), 200
+
+    except Exception as ex:
+        return jsonify({'message': str(ex)}), 500
 
 
 @app.route('/upload_image', methods=['POST'])
@@ -68,7 +92,7 @@ def upload_frame():
     image_data = base64.b64decode(image_data.split(',')[1])
     np_image = np.frombuffer(image_data, dtype=np.uint8)
     frame = cv2.imdecode(np_image, cv2.IMREAD_COLOR)
-    print("Hitting Server")
+
     # Call your process_video function
     result = main.process_video(frame)
 

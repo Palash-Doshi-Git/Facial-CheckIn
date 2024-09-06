@@ -68,6 +68,7 @@ def face_encodings(images):
 
 
 def process_video(frame):
+    print("Hitting Server")
     person_names, encode_list_known = load_known_faces()
     result = "No face recognized"
 
@@ -97,6 +98,7 @@ def process_video(frame):
     # Encode the frame to be sent back to frontend
     _, buffer = cv2.imencode('.jpg', frame)
     jpg_as_text = base64.b64encode(buffer).decode('utf-8')
+    print(result)
 
     return {"result": result, "frame": jpg_as_text}
 

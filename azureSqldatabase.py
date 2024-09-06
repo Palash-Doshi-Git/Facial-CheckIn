@@ -1,4 +1,8 @@
+from datetime import datetime
 import mysql.connector
+import pandas as pd
+import matplotlib.pyplot as plt
+from matplotlib.backends.backend_pdf import PdfPages
 from mysql.connector import errorcode
 from dotenv import load_dotenv
 import os
@@ -20,11 +24,6 @@ try:
     print("Connection established")
     cursor = conn.cursor()
 
-    def cleanup():
-        cursor.close()
-        conn.close()
-        print("Connection Closed")
-
 except mysql.connector.Error as err:
     if err.errno == errorcode.ER_ACCESS_DENIED_ERROR:
         print("Something is wrong with the user name or password")
@@ -42,6 +41,44 @@ def create_table():
         )
     ''')
     conn.commit()
+
+
+def fetch_attendance():
+    query = "SELECT * FROM StudentAttendance"
+    df = pd.read_sql(query, conn)
+    return df
+
+
+def save_to_excel(df):
+    try:
+        directory_path = "excel"
+        if not os.path.exists(directory_path):
+            os.makedirs(directory_path)
+
+        # Generate file path with timestamp
+        timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+        file_path = os.path.join(directory_path, f"Attendance_{timestamp}.xlsx")
+        # save_pdf(df, file_path)
+        df.to_excel(file_path,index=False,engine='openpyxl')
+        return file_path
+    except Exception as e:
+        print("Error : ", {e})
+
+
+# def save_pdf(df,file_path):
+#     with PdfPages(file_path) as pdf:
+#         plt.figure(figsize=(12, 6))
+#         plt.title('Table Data')
+#         plt.axis('off')
+#         table = plt.table(cellText=df.values, colLabels=df.columns, cellLoc='center', loc='center')
+#         table.auto_set_font_size(False)
+#         table.set_fontsize(10)
+#         table.scale(1.2, 1.2)
+#
+#         pdf.savefig()
+#         plt.close()
+#
+#     return file_path
 
 def insert_data(name, dtstring):
     cursor.execute('''
@@ -78,6 +115,3 @@ def update_data(name, dtstring):
         conn.commit()
     else:
         insert_data(name, dtstring)
-
-
-
