@@ -96,5 +96,5 @@ OpenCV handles real-time face detection and recognition, processing video frames
 ![OpenCV Face Recognition](path-to-screenshot)
 
 ### Final Project Statement
-
 Facial CheckIn is a comprehensive and modern solution for attendance management. By leveraging Azure Blob Storage, Azure SQL, OpenCV, and Azure Communication Services, the system offers an efficient, secure, and automated way to record and manage attendance, making it ideal for organizations seeking to streamline their processes.
+
