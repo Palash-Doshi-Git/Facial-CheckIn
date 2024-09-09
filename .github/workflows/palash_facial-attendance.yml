@@ -1,13 +1,10 @@
-# Docs for the Azure Web Apps Deploy action: https://github.com/Azure/webapps-deploy
-# More GitHub Actions for Azure: https://github.com/Azure/actions
-# More info on Python, GitHub Actions, and Azure App Service: https://aka.ms/python-webapps-actions
 
 name: Build and deploy Python app to Azure Web App - facial-attendance
 
 on:
   push:
     branches:
-      - Palash
+      - main
   workflow_dispatch:
 
 jobs:
@@ -40,7 +37,6 @@ jobs:
 
       - name: Install cmake 3.29.3 and wheel==0.43.0
         run: |
-          sudo apt remove --purge cmake -y
           wget https://github.com/Kitware/CMake/releases/download/v3.29.3/cmake-3.29.3-linux-x86_64.sh
           sudo mkdir /opt/cmake-3.29.3
           sudo sh cmake-3.29.3-linux-x86_64.sh --prefix=/opt/cmake-3.29.3 --skip-license
