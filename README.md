@@ -6,11 +6,10 @@ Facial CheckIn automates attendance tracking using facial recognition technology
 
 ### Project Details
 
-- **Project Demo URL:** [Link to the Live Project]
-- **Demo Video URL:** [Link to the Demo Video]
-- **GitHub Repository URL:** [GitHub Repository Link]
-- **Industry:** Education / Corporate / Technology
-- **Sample Credentials:** `sampleemail@example.com` & `password123`
+- **Project Demo URL:** [Link to Project Demo](https://facial-attendance.azurewebsites.net/)
+- **Demo Video URL:** [Link to the Demo Video](https://drive.google.com/file/d/1MJERXzDJjAEjfj6DORplq28HgrzV4VA3/view?usp=sharing)
+- **GitHub Repository URL:** [GitHub Repository Link](https://github.com/Palash-Doshi-Git/Facial-CheckIn.git)
+- **Industry:** Technology
 
 ### Azure Services Used
 
@@ -77,23 +76,24 @@ OpenCV handles real-time face detection and recognition, processing video frames
 
 #### Azure App Service
 **Description:** Hosting environment for the web application.  
-![Azure App Service](path-to-screenshot)
+![App Service Delpoment](https://github.com/user-attachments/assets/319be415-9612-46d3-be5f-ca550bf0cddc)
 
 #### Azure SQL Database
 **Description:** Data storage and management for attendance records.  
-![Azure SQL Database](path-to-screenshot)
+![Azure Mysql Server](https://github.com/user-attachments/assets/1272df12-327c-432c-aba9-6e520d955595)
 
 #### Azure Blob Storage
 **Description:** Image storage for facial recognition data.  
-![Azure Blob Storage](path-to-screenshot)
+![Blob storage](https://github.com/user-attachments/assets/34745291-b451-4f0c-8c75-6f2d7e2fd6c1)
 
 #### Azure Communication Services
 **Description:** Emailing attendance reports to recipients.  
-![Azure Communication Services](path-to-screenshot)
+![Email Comm Service](https://github.com/user-attachments/assets/b98e6c41-98a5-43f1-a3d1-68f6c4e0dd3d)
 
-#### OpenCV for Face Recognition
-**Description:** Real-time face detection and recognition.  
-![OpenCV Face Recognition](path-to-screenshot)
+#### Facial Check-IN UI
+**Description:** Real-time face detection and recognition system.  
+![Facial CheckIn UI](https://github.com/user-attachments/assets/08c35486-c6d0-4a27-a88e-67d7c4aa94e1)
+
 
 ### Final Project Statement
 Facial CheckIn is a comprehensive and modern solution for attendance management. By leveraging Azure Blob Storage, Azure SQL, OpenCV, and Azure Communication Services, the system offers an efficient, secure, and automated way to record and manage attendance, making it ideal for organizations seeking to streamline their processes.
