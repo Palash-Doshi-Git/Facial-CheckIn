@@ -1,8 +1,8 @@
-# Live Face Attendance System
+# Facial CheckIn
 
-The Live Face Attendance System automates attendance tracking using facial recognition technology. The project leverages OpenCV for face recognition, Azure Blob services for image storage, Azure SQL for attendance data management, and Azure Communication Services to email attendance reports. This system provides a secure, efficient, and contactless method for recording and managing attendance.
+Facial CheckIn automates attendance tracking using facial recognition technology. The project leverages OpenCV for face recognition, Azure Blob services for image storage, Azure SQL for attendance data management, and Azure Communication Services to email attendance reports. This system provides a secure, efficient, and contactless method for recording and managing attendance.
 
-## Project Title: **Live Face Attendance System**
+## Project Title: **Facial CheckIn**
 
 ### Project Details
 
@@ -32,19 +32,19 @@ The Live Face Attendance System automates attendance tracking using facial recog
 
 ### Problem Statement
 
-Traditional methods for tracking attendance are often manual, time-consuming, and prone to errors. The Live Face Attendance System addresses these issues by providing an automated, contactless solution that uses facial recognition technology to accurately record and manage attendance.
+Traditional methods for tracking attendance are often manual, time-consuming, and prone to errors. Facial CheckIn addresses these issues by providing an automated, contactless solution that uses facial recognition technology to accurately record and manage attendance.
 
 ### Project Description
 
-The Live Face Attendance System allows users to mark their attendance by recognizing their face through a camera using OpenCV. The system captures images, processes them for facial recognition, and updates attendance records stored in Azure SQL Database. Images are managed in Azure Blob Storage, and attendance sheets are emailed to designated recipients using Azure Communication Services.
+Facial CheckIn allows users to mark their attendance by recognizing their face through a camera using OpenCV. The system captures images, processes them for facial recognition, and updates attendance records stored in Azure SQL Database. Images are managed in Azure Blob Storage, and attendance sheets are emailed to designated recipients using Azure Communication Services.
 
 #### Key Features
-- **Real-time Face Recognition with OpenCV**
-- **Image Storage in Azure Blob Storage**
-- **Attendance Data Management with Azure SQL Database**
-- **Automated Email Reports via Azure Communication Services**
-- **User-friendly Web Interface**
-- **Secure and Contactless Attendance**
+- Real-time Face Recognition with OpenCV
+- Image Storage in Azure Blob Storage
+- Attendance Data Management with Azure SQL Database
+- Automated Email Reports via Azure Communication Services
+- User-friendly Web Interface
+- Secure and Contactless Attendance
 
 #### Future Enhancements
 - Enhance facial recognition accuracy with advanced machine learning algorithms.
@@ -96,6 +96,5 @@ OpenCV handles real-time face detection and recognition, processing video frames
 ![OpenCV Face Recognition](path-to-screenshot)
 
 ### Final Project Statement
-
-The Live Face Attendance System is a comprehensive and modern solution for attendance management. By leveraging Azure Blob Storage, Azure SQL, OpenCV, and Azure Communication Services, the system offers an efficient, secure, and automated way to record and manage attendance, making it ideal for organizations seeking to streamline their processes.
+Facial CheckIn is a comprehensive and modern solution for attendance management. By leveraging Azure Blob Storage, Azure SQL, OpenCV, and Azure Communication Services, the system offers an efficient, secure, and automated way to record and manage attendance, making it ideal for organizations seeking to streamline their processes.
 
