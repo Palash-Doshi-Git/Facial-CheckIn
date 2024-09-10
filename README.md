@@ -7,7 +7,7 @@ Facial CheckIn automates attendance tracking using facial recognition technology
 ### Project Details
 
 - **Project Demo URL:** [Link to Project Demo](https://facial-attendance.azurewebsites.net/)
-- **Demo Video URL:** [Link to the Demo Video](https://drive.google.com/file/d/1MJERXzDJjAEjfj6DORplq28HgrzV4VA3/view?usp=sharing)
+- **Demo Video URL:** [Link to the Demo Video](https://drive.google.com/file/d/1XQN6tM1ug7N0h0rqx_iioU5zjRGrClMB/view?usp=sharing)
 - **GitHub Repository URL:** [GitHub Repository Link](https://github.com/Palash-Doshi-Git/Facial-CheckIn.git)
 - **Industry:** Technology
 
