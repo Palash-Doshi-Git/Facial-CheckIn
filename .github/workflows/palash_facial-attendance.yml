@@ -18,16 +18,16 @@ jobs:
         uses: actions/setup-python@v5
         with:
           python-version: '3.11.9'
-      
-      - name: Install LibGl.so
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y libgl1-mesa-glx
 
       - name: Create and start virtual environment
         run: |
           python -m venv venv
           source venv/bin/activate
+          
+      - name: Install LibGl.so
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libgl1-mesa-glx
 
       - name: Install Python3 dependencies for dlib
         run: |
