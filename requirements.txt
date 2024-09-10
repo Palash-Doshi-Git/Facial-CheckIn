@@ -32,7 +32,7 @@ mysql-connector-python==9.0.0
 numpy==1.26.4
 numpy1==0.0.1
 oauthlib==3.2.2
-opencv-python==4.10.0.84
+opencv-python-headless
 openpyxl==3.1.5
 packaging==24.1
 pandas==2.2.2
